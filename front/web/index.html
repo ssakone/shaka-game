@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Jeu de Concentration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Jeu de Concentration</h1>
+            <p>Trouvez les nombres dans l'ordre croissant !</p>
+        </header>
+
+        <div class="game-controls">
+            <button id="startBtn" class="btn-primary">🎯 JOUER</button>
+            <button id="resetBtn" class="btn-secondary">Recommencer</button>
+            <button id="scoresBtn" class="btn-secondary">Scores</button>
+            <button id="leaveSessionBtn" class="btn-secondary hidden">Quitter la session</button>
+        </div>
+
+        <div class="game-info">
+            <div class="info-item">
+                <span class="label">Chercher:</span>
+                <span id="currentTarget" class="target">1</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Temps:</span>
+                <span id="timer">00:00:00.00</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Progression:</span>
+                <span id="progress">0/100</span>
+            </div>
+        </div>
+
+        <!-- Multiplayer scores display -->
+        <div id="multiplayerScores" class="multiplayer-scores hidden">
+            <div class="player-score me">
+                <div class="score-label">VOUS</div>
+                <div class="score-value" id="myScore">0</div>
+            </div>
+            <div class="vs-divider">VS</div>
+            <div class="player-score opponent">
+                <div class="score-label" id="opponentScoreLabel">ADVERSAIRE</div>
+                <div class="score-value" id="opponentScore">0</div>
+            </div>
+        </div>
+
+        <div id="gameGrid" class="game-grid"></div>
+
+        <div id="gameComplete" class="game-complete hidden">
+            <h2>🎉 Félicitations !</h2>
+            <p>Vous avez terminé en <span id="finalTime">00:00:00.00</span> !</p>
+            <button id="playAgainBtn" class="btn-primary">Rejouer</button>
+        </div>
+
+        <div id="scoreboard" class="scoreboard hidden">
+            <h2>🏆 Meilleurs Scores</h2>
+            <div id="scoresList"></div>
+            <button id="closeScoresBtn" class="btn-secondary">Fermer</button>
+        </div>
+    </div>
+
+    <!-- Game Mode Modal -->
+    <div id="gameModeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎮 CHOISIR LE MODE DE JEU</h2>
+                <button id="closeModal" class="modal-close">&times;</button>
+            </div>
+            
+            <div class="modal-tabs">
+                <button id="soloTab" class="tab-btn active">👤 SOLO</button>
+                <button id="multiTab" class="tab-btn">👥 MULTIJOUEUR</button>
+            </div>
+            
+            <div class="modal-body">
+                <!-- SOLO TAB -->
+                <div id="soloPanel" class="tab-panel active">
+                    <div class="mode-card">
+                        <h3>🎯 MODE SOLO</h3>
+                        <p>Jouez seul contre le chrono !</p>
+                        <ul>
+                            <li>✨ Effets visuels spectaculaires</li>
+                            <li>⏱️ Chronométrage précis</li>
+                            <li>🏆 Scoreboard personnel</li>
+                            <li>🎵 Sons et vibrations</li>
+                        </ul>
+                        <button id="startSoloBtn" class="btn-primary-large">🚀 COMMENCER</button>
+                    </div>
+                </div>
+                
+                <!-- MULTIPLAYER TAB -->
+                <div id="multiPanel" class="tab-panel">
+                    <!-- Step 1: Choose multiplayer type -->
+                    <div id="mpTypeSelector" class="mp-step active">
+                        <h3>👥 CHOISIR LE MODE</h3>
+                        <div class="mp-type-grid">
+                            <div class="mp-type-card" id="quickMatchCard">
+                                <div class="type-icon">⚡</div>
+                                <h4>MATCH RAPIDE</h4>
+                                <p>Trouvez un adversaire instantanément</p>
+                                <button class="btn-type-select" data-type="quick">JOUER</button>
+                            </div>
+                            <div class="mp-type-card" id="privateRoomCard">
+                                <div class="type-icon">🏠</div>
+                                <h4>SALLE PRIVÉE</h4>
+                                <p>Jouez avec un ami spécifique</p>
+                                <button class="btn-type-select" data-type="private">CHOISIR</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2: Private room actions -->
+                    <div id="mpPrivateRoom" class="mp-step">
+                        <div class="step-header">
+                            <button id="backToTypes" class="btn-back">← RETOUR</button>
+                            <h3>🏠 SALLE PRIVÉE</h3>
+                        </div>
+                        
+                        <div class="private-room-container">
+                            <div class="room-action-section" id="createSection">
+                                <div class="section-header">
+                                    <div class="action-icon">➕</div>
+                                    <h4>CRÉER UNE SALLE</h4>
+                                </div>
+                                <p>Créez une nouvelle salle et partagez le code</p>
+                                <div class="action-form">
+                                    <input id="createNameInput" placeholder="VOTRE NOM" maxlength="20" class="form-input">
+                                    <button id="createRoomBtn" class="btn-action">CRÉER</button>
+                                </div>
+                            </div>
+                            
+                            <div class="room-divider">OU</div>
+                            
+                            <div class="room-action-section" id="joinSection">
+                                <div class="section-header">
+                                    <div class="action-icon">🚪</div>
+                                    <h4>REJOINDRE UNE SALLE</h4>
+                                </div>
+                                <p>Entrez votre nom et le code de la salle</p>
+                                <div class="action-form">
+                                    <input id="joinNameInput" placeholder="VOTRE NOM" maxlength="20" class="form-input">
+                                    <input id="roomCodeInput" placeholder="CODE (5 LETTRES)" maxlength="5" class="form-input code-input">
+                                    <button id="joinRoomBtn" class="btn-action">REJOINDRE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3: Room lobby -->
+                    <div id="mpRoomLobby" class="mp-step">
+                        <div class="step-header">
+                            <button id="backFromRoom" class="btn-back">← QUITTER</button>
+                            <h3 id="roomLobbyTitle">🏠 SALLE</h3>
+                        </div>
+                        
+                        <div id="roomCodeDisplay" class="room-code-display">
+                            <div class="code-label">CODE DE LA SALLE</div>
+                            <div id="displayedRoomCode" class="room-code-big">ABCD5</div>
+                            <button id="copyCodeBtn" class="btn-copy">📋 COPIER</button>
+                        </div>
+                        
+                        <div class="lobby-players">
+                            <div class="player-status">
+                                <div class="player-card me">
+                                    <div class="player-avatar">👤</div>
+                                    <div class="player-info">
+                                        <div class="player-name">VOUS</div>
+                                        <div id="myStatus" class="player-ready">Pas prêt</div>
+                                    </div>
+                                </div>
+                                <div class="vs-indicator">VS</div>
+                                <div class="player-card opponent">
+                                    <div class="player-avatar">🤖</div>
+                                    <div class="player-info">
+                                        <div class="player-name" id="opponentName">EN ATTENTE...</div>
+                                        <div id="opponentReady" class="player-ready">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="lobby-actions">
+                            <button id="readyBtn" class="btn-ready-big">✋ JE SUIS PRÊT</button>
+                            <button id="startMatchBtn" class="btn-start-big hidden">🚀 LANCER LA PARTIE</button>
+                        </div>
+                        
+                        <div id="lobbyStatus" class="lobby-status"></div>
+                    </div>
+                    
+                    <!-- Step 4: Connecting/Searching -->
+                    <div id="mpConnecting" class="mp-step">
+                        <div class="connecting-animation">
+                            <div class="spinner"></div>
+                            <h3 id="connectingTitle">🔍 RECHERCHE D'ADVERSAIRE...</h3>
+                            <p id="connectingDesc">Nous cherchons un joueur disponible</p>
+                            <button id="cancelSearch" class="btn-cancel">ANNULER</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "fungame-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Multiplayer WebSocket server for the concentration game (no external deps).",
+  "main": "index.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"No tests defined\" && exit 0"
+  }
+}
+

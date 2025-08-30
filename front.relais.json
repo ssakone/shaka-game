@@ -1,0 +1,10 @@
+{
+  "id": "qos2ege7ltq778b",
+  "folder": "front/web/",
+  "type": "web",
+  "state": "DEPLOYED",
+  "domain": "shaka.relais.dev",
+  "lastDeployed": "2025-08-30T22:24:50.978Z",
+  "file": "web_1756592690036_ggygs83upi.tar.gz",
+  "lastUpdated": "2025-08-30T22:24:51.831Z"
+}

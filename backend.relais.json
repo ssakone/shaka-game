@@ -1,0 +1,10 @@
+{
+  "id": "xp29a5mvi5wc8qp",
+  "folder": "server/",
+  "type": "node",
+  "state": "DEPLOYED",
+  "domain": "shaka-server.relais.dev",
+  "lastDeployed": "2025-08-30T22:24:16.506Z",
+  "file": "server_1756592655548_3nphf4m6f0.tar.gz",
+  "lastUpdated": "2025-08-30T22:24:40.673Z"
+}
